@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+int isLittleEndian(){
+  
+  //MSB is 0, LSB is 1
+  int x = 1;
+
+  //Return MSB when big endian, LSB when little endian
+  return (int) (* (char *)&x);
+}
+
+//Runs in big-endian machine
+int mask_lsb(int x, int y){
+  return (x & 0xFF) | (y & ~0xFF);
+}
+
+int mask_msb(int x, int y){
+  int w = sizeof(int) << 3;
+  return (x & ~0xFF) | (y & 0xFF);
+  
+}
+
+
+int main(){
+
+  int x = 0x089ABCDEF;
+  int y = 0x76543210;
+
+  int result = mask_lsb(x, y);
+
+  (isLittleEndian() && (result = mask_msb(x, y)));
+
+  printf("%X\n", result);
+
+  getchar();
+
+  return 0;
+  
+}

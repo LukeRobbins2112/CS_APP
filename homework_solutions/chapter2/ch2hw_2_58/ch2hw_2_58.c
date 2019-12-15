@@ -1,0 +1,23 @@
+/* Write a procedure isLittleEndian that will return 1 when compiled and run on a little-endian machine, and will return 0 when compiled on a big endian machine. The program should run on any machine regardless of its word size*/
+
+#include <stdio.h>
+
+int isLittleEndian(){
+
+  int x = 1;
+
+  int result = (int) ( *(char *)&x);
+  return result;
+  
+}
+
+int main(){
+
+  int result = isLittleEndian();
+
+  ((isLittleEndian()) && printf("Little endian machine"));
+  ((!isLittleEndian()) && printf("Big endian machine"));
+
+  return 0;
+  
+}
