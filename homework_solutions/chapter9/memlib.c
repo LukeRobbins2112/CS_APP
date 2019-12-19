@@ -4,6 +4,8 @@
 #include <string.h>
 #include <sys/mman.h>
 
+#include "memlib.h"
+
 // Constants
 #define MAX_HEAP (20*(1<<20))  /* 20 MB */
 #define PAGE_SIZE 1024 * 4
