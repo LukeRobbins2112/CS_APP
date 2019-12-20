@@ -1,7 +1,11 @@
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "memlib.h"
 #include "mm.h"
-#include <stdlib.h>
+
 
 // *************************************
 // Constants & macros
@@ -21,7 +25,7 @@
 #define GET_SIZE(p) (GET(p) & ~0x7)
 #define GET_ALLOC(p) (GET(p) & 0x1)
 
-#define HDRP(bp) ((char *)bp - DSIZE)
+#define HDRP(bp) ((char *)bp - WSIZE)
 #define FTRP(bp) ((char *)bp + GET_SIZE(HDRP(bp)) - DSIZE)
 
 #define NEXT_BLKP(bp) ((char *)bp + GET_SIZE(((char *)(bp) - WSIZE)))
@@ -49,6 +53,9 @@ static void * find_fit(size_t size);
 // *********************************
 
 int mm_init(){
+
+  // Initialize heap itself
+  mem_init();
 
   // Create initial empty heap
   if ((heap_listp = mem_sbrk(4*WSIZE)) == (void *)-1){
@@ -83,7 +90,7 @@ void mm_free(void *bp){
   coalesce(bp);
 }
 
-void * mm_alloc(size_t size){
+void* mm_alloc(size_t size){
 
   size_t adjustedSize;
   size_t extendSize;
@@ -142,7 +149,7 @@ static void * extend_heap(size_t words){
 }
 
 
-// @TODO implement this
+
 static void * coalesce (void * bp){
 
   size_t prevAlloc = GET_ALLOC(FTRP(PREV_BLKP(bp)));
@@ -204,7 +211,7 @@ static void * find_fit(size_t size){
 
   void * fitPtr;
     
-  for (fitPtr = NEXT_BLKP(heap_listp); GET_SIZE(HDRP(fitPtr)) != 0; fitPtr = NEXT_BLKP(fitPtr)){
+  for (fitPtr = heap_listp; GET_SIZE(HDRP(fitPtr)) != 0; fitPtr = NEXT_BLKP(fitPtr)){
     if (!GET_ALLOC(HDRP(fitPtr)) && (size <= GET_SIZE(HDRP(fitPtr)))){
 	return fitPtr;
       }
